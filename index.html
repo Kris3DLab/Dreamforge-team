@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamForge Team - Roblox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f0f2a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        #stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(to right, #fff, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: shoot var(--shoot-duration) linear infinite;
+            animation-delay: var(--delay);
+        }
+
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,255,255,0.8), transparent);
+            right: 4px;
+            top: 1px;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateX(-500px) translateY(300px); opacity: 0; }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .group-logo {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 20px;
+            filter: drop-shadow(0 0 40px rgba(100, 200, 255, 0.6));
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #64c8ff, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .hero .subtitle {
+            color: #8892b0;
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #5865F2, #4752C4);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+        }
+
+        .discord-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
+        }
+
+        .discord-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #64c8ff;
+            font-size: 1.1rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px 60px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(20, 20, 40, 0.8));
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(100, 200, 255, 0.2);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        .game-info {
+            padding: 25px;
+        }
+
+        .game-info h3 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .game-info p {
+            color: #8892b0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #00D4AA, #00B894);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background: linear-gradient(135deg, #00B894, #009688);
+            transform: scale(1.05);
+        }
+
+        .team-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-cube {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid rgba(100, 200, 255, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-member:hover .profile-cube {
+            border-color: #64c8ff;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(100, 200, 255, 0.4);
+        }
+
+        .profile-cube img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-member .role {
+            color: #64c8ff;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 12px;
+        }
+
+        .team-member .name {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 450px;
+            text-align: center;
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .modal-cube {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 25px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid #64c8ff;
+            box-shadow: 0 0 40px rgba(100, 200, 255, 0.5);
+        }
+
+        .modal-cube img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-role {
+            color: #64c8ff;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .modal-name {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-desc {
+            color: #aaa;
+            line-height: 1.7;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #64c8ff;
+        }
+
+        .stats-section {
+            background: linear-gradient(180deg, transparent, rgba(100, 200, 255, 0.05));
+            padding: 60px 30px;
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #64c8ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #8892b0;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #5a6a8a;
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+        }
+
+        .footer a {
+            color: #64c8ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .group-logo {
+                width: 200px;
+                height: 200px;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-bg"></div>
+
+    <div class="content">
+        <section class="hero">
+            <div class="logo-container">
+                <img src="group.png" alt="DreamForge Team Logo" class="group-logo">
+            </div>
+            <h1>DreamForge Team</h1>
+            <p class="subtitle">Roblox Csapat | Fejlesztők, Akik álmodnak</p>
+            <a href="https://discord.gg/7xZnsHnDhY" target="_blank" class="discord-btn">
+                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                Csatlakozz Discord-ra
+            </a>
+        </section>
+
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Játék</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Csapattag</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">HU</div>
+                    <div class="stat-label">Nyelv</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-title">
+            <h2>Játékaink</h2>
+            <p>Fedezd fel a magyar Roblox élményeinket</p>
+        </section>
+
+        <div class="games-grid">
+            <div class="game-card">
+                <img src="metfy2.png" alt="Magyar Escape Tsunami For Youtubers" class="game-thumbnail">
+                <div class="game-info">
+                    <h3>Magyar Escape Tsunami For Youtubers</h3>
+                    <p>Szorító víz alatti kihívás! Gyűjtsd össze a kincseket és mentsd meg magad a cunami elől ebben az izgalmas túlélőjátékban.</p>
+                    <a href="https://www.roblox.com/games/73532844100795/Magyar-Escape-Tsunami-For-Youtubers" target="_blank" class="play-btn">
+                        ▶ Játssz Most
+                    </a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="mgag2.png" alt="Magyar Grow a Garden" class="game-thumbnail">
+                <div class="game-info">
+                    <h3>Magyar Grow a Garden</h3>
+                    <p>Növeszd a saját kertedet! Ültess, gondozz és arass be különleges növényeket ebben a relaxáló farming élményben.</p>
+                    <a href="https://www.roblox.com/games/79438847818254/Magyar-Grow-a-Garden" target="_blank" class="play-btn">
+                        ▶ Játssz Most
+                    </a>
+                </div>
+            </div>
+
+            <div class="game-card">
+                <img src="ubi2.png" alt="Uborka Mic Up" class="game-thumbnail">
+                <div class="game-info">
+                    <h3>Uborka Mic Up</h3>
+                    <p>Vicces hangalapú játék! Használd a mikrofonodat és szórakozz a legújabb hangos kihívásban.</p>
+                    <a href="https://www.roblox.com/games/133860068553637/Uborka-Mic-Up" target="_blank" class="play-btn">
+                        ▶ Játssz Most
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <section class="team-section">
+            <div class="section-title">
+                <h2>Csapatunk</h2>
+                <p>Ismerd meg a DreamForge Team tagjait</p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-member" onclick="showMemberInfo('kris3dlab')">
+                    <div class="profile-cube">
+                        <img src="kris3dlab.png" alt="Kris3DLab">
+                    </div>
+                    <span class="role">Fő Tulajdonos</span>
+                    <span class="name">Kris3DLab</span>
+                </div>
+
+                <div class="team-member" onclick="showMemberInfo('benedek')">
+                    <div class="profile-cube">
+                        <img src="benedek.png" alt="Benedek">
+                    </div>
+                    <span class="role">Tulajdonos</span>
+                    <span class="name">Benedek</span>
+                </div>
+
+                <div class="team-member" onclick="showMemberInfo('xytax')">
+                    <div class="profile-cube">
+                        <img src="xytax.png" alt="Xytax">
+                    </div>
+                    <span class="role">Admin</span>
+                    <span class="name">Xytax</span>
+                </div>
+
+                <div class="team-member" onclick="showMemberInfo('kryono')">
+                    <div class="profile-cube">
+                        <img src="kryono.png" alt="Kryono">
+                    </div>
+                    <span class="role">Community Manager</span>
+                    <span class="name">Kryono</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© 2026 DreamForge Team | Minden jog fenntartva</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="memberModal">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <div class="modal-content">
+            <div class="modal-cube">
+                <img id="modalImg" src="" alt="">
+            </div>
+            <p class="modal-role" id="modalRole"></p>
+            <h2 class="modal-name" id="modalName"></h2>
+            <p class="modal-desc" id="modalDesc"></p>
+        </div>
+    </div>
+
+    <script>
+        const teamData = {
+            kris3dlab: {
+                name: 'Kris3DLab',
+                role: 'Fő Tulajdonos',
+                image: 'kris3dlab.png',
+                description: 'A DreamForge csapat alapítója és fő tulajdonosa. Ő felelős a csapat stratégiai irányításáért és a nagyobb döntésekért. Vezetésével a csapat folyamatosan növekszik és fejlődik.'
+            },
+            benedek: {
+                name: 'Benedek',
+                role: 'Tulajdonos',
+                image: 'benedek.png',
+                description: 'A DreamForge csapat tulajdonosa. Segít a csapat vezetésében és a projektfejlesztés koordinálásában. Fontos szerepet tölt be a játékok fejlesztésében.'
+            },
+            xytax: {
+                name: 'Xytax',
+                role: 'Admin',
+                image: 'xytax.png',
+                description: 'A DreamForge csapat adminisztrátora. Felügyeli a közösségi szabályok betartását és segíti a smooth működést. Mindig segít a játékosoknak.'
+            },
+            kryono: {
+                name: 'Kryono',
+                role: 'Community Manager',
+                image: 'kryono.png',
+                description: 'A DreamForge csapat Community Managere. Kapcsolatot tart a közösséggel, segít a játékosoknak és szervezi az eseményeket. A csapat arca a közösség előtt.'
+            }
+        };
+
+        function showMemberInfo(memberId) {
+            const member = teamData[memberId];
+            document.getElementById('modalImg').src = member.image;
+            document.getElementById('modalRole').textContent = member.role;
+            document.getElementById('modalName').textContent = member.name;
+            document.getElementById('modalDesc').textContent = member.description;
+            document.getElementById('memberModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('memberModal').classList.remove('active');
+        }
+
+        document.getElementById('memberModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        function createStars() {
+            const container = document.getElementById('stars-bg');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+            for (let i = 0; i < 3; i++) {
+                const shooting = document.createElement('div');
+                shooting.className = 'shooting-star';
+                shooting.style.left = (Math.random() * 100 + 50) + '%';
+                shooting.style.top = Math.random() * 50 + '%';
+                shooting.style.setProperty('--shoot-duration', (Math.random() * 2 + 1.5) + 's');
+                shooting.style.setProperty('--delay', (Math.random() * 10 + i * 5) + 's');
+                container.appendChild(shooting);
+            }
+        }
+
+        createStars();
+    </script>
+</body>
+</html>

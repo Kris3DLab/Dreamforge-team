@@ -1,735 +1,986 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DreamForge Team - Roblox</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0f0f2a 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            color: #fff;
-        }
-
-        #stars-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .star {
-            position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            animation: twinkle var(--duration) ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .shooting-star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: linear-gradient(to right, #fff, transparent);
-            border-radius: 50%;
-            opacity: 0;
-            animation: shoot var(--shoot-duration) linear infinite;
-            animation-delay: var(--delay);
-        }
-
-        .shooting-star::after {
-            content: '';
-            position: absolute;
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(to right, rgba(255,255,255,0.8), transparent);
-            right: 4px;
-            top: 1px;
-        }
-
-        @keyframes shoot {
-            0% { transform: translateX(0) translateY(0); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateX(-500px) translateY(300px); opacity: 0; }
-        }
-
-        .content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero {
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .logo-container {
-            margin-bottom: 30px;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .group-logo {
-            width: 280px;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 20px;
-            filter: drop-shadow(0 0 40px rgba(100, 200, 255, 0.6));
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #64c8ff, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-        }
-
-        .hero .subtitle {
-            color: #8892b0;
-            font-size: 1.3rem;
-            margin-bottom: 30px;
-        }
-
-        .discord-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 35px;
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
-        }
-
-        .discord-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(88, 101, 242, 0.6);
-        }
-
-        .discord-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        .section-title {
-            text-align: center;
-            margin: 60px 0 40px;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-
-        .section-title p {
-            color: #64c8ff;
-            font-size: 1.1rem;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 30px 60px;
-        }
-
-        .game-card {
-            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(20, 20, 40, 0.8));
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(100, 200, 255, 0.2);
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .game-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(100, 200, 255, 0.6);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(100, 200, 255, 0.2);
-        }
-
-        .game-thumbnail {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid rgba(100, 200, 255, 0.2);
-        }
-
-        .game-info {
-            padding: 25px;
-        }
-
-        .game-info h3 {
-            font-size: 1.4rem;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-
-        .game-info p {
-            color: #8892b0;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .play-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #00D4AA, #00B894);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .play-btn:hover {
-            background: linear-gradient(135deg, #00B894, #009688);
-            transform: scale(1.05);
-        }
-
-        .team-section {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 60px 30px;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .team-member {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .team-member:hover {
-            transform: scale(1.05);
-        }
-
-        .profile-cube {
-            width: 130px;
-            height: 130px;
-            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 3px solid rgba(100, 200, 255, 0.3);
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .team-member:hover .profile-cube {
-            border-color: #64c8ff;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(100, 200, 255, 0.4);
-        }
-
-        .profile-cube img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .team-member .role {
-            color: #64c8ff;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 12px;
-        }
-
-        .team-member .name {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border-radius: 25px;
-            padding: 40px;
-            max-width: 450px;
-            text-align: center;
-            border: 2px solid rgba(100, 200, 255, 0.3);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
-            position: relative;
-        }
-
-        .modal-cube {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 25px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 4px solid #64c8ff;
-            box-shadow: 0 0 40px rgba(100, 200, 255, 0.5);
-        }
-
-        .modal-cube img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-role {
-            color: #64c8ff;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .modal-name {
-            color: #fff;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .modal-desc {
-            color: #aaa;
-            line-height: 1.7;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: color 0.3s ease;
-        }
-
-        .close-btn:hover {
-            color: #64c8ff;
-        }
-
-        .stats-section {
-            background: linear-gradient(180deg, transparent, rgba(100, 200, 255, 0.05));
-            padding: 60px 30px;
-            margin: 40px 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 20px;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #64c8ff, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: #8892b0;
-            font-size: 1rem;
-            margin-top: 5px;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: #5a6a8a;
-            border-top: 1px solid rgba(100, 200, 255, 0.1);
-        }
-
-        .footer a {
-            color: #64c8ff;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .about-section {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 30px 40px;
-        }
-
-        .about-card {
-            background: linear-gradient(145deg, rgba(30, 30, 60, 0.9), rgba(20, 20, 40, 0.9));
-            border-radius: 25px;
-            padding: 40px;
-            text-align: center;
-            border: 1px solid rgba(100, 200, 255, 0.3);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .about-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .about-card h2 {
-            font-size: 2rem;
-            color: #fff;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #64c8ff, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .about-card p {
-            color: #b0b8d0;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
-
-        .about-card strong {
-            color: #64c8ff;
-        }
-
-        .about-features {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .about-features span {
-            background: rgba(100, 200, 255, 0.15);
-            padding: 10px 20px;
-            border-radius: 25px;
-            color: #64c8ff;
-            font-size: 0.95rem;
-            border: 1px solid rgba(100, 200, 255, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .group-logo {
-                width: 200px;
-                height: 200px;
-            }
-            .games-grid {
-                grid-template-columns: 1fr;
-            }
-            .about-features {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DreamForge Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c1:#00ffe7;
+  --c2:#ff2d78;
+  --c3:#a855f7;
+  --bg:#060612;
+  --bg2:#0b0b1f;
+  --card:#0d0d22;
+  --glass:rgba(13,13,34,0.8);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+::selection{background:var(--c1);color:#000;}
+
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--c1);border-radius:3px;}
+
+body{
+  background:var(--bg);
+  font-family:'Rajdhani',sans-serif;
+  color:#fff;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CUSTOM CURSOR */
+#cursor{
+  position:fixed;width:16px;height:16px;
+  background:var(--c1);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  mix-blend-mode:screen;
+  transition:transform 0.1s ease, width 0.2s, height 0.2s;
+  transform:translate(-50%,-50%);
+}
+#cursor-ring{
+  position:fixed;width:40px;height:40px;
+  border:1px solid rgba(0,255,231,0.4);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transition:all 0.15s ease;
+  transform:translate(-50%,-50%);
+}
+body:hover #cursor{opacity:1;}
+
+/* CANVAS BG */
+#bg-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+}
+
+/* SCANLINES */
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;z-index:1;
+}
+
+/* NOISE OVERLAY */
+body::after{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  opacity:0.025;pointer-events:none;z-index:2;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:128px;
+}
+
+.content{position:relative;z-index:3;}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 20px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-grid{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background-image:
+    linear-gradient(rgba(0,255,231,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,231,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+}
+
+.logo-wrap{
+  position:relative;
+  margin-bottom:40px;
+  animation:logo-float 5s ease-in-out infinite;
+}
+@keyframes logo-float{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-18px) rotate(1deg);}
+}
+.logo-wrap::before{
+  content:'';
+  position:absolute;inset:-15px;
+  border-radius:28px;
+  background:conic-gradient(from 0deg, var(--c1), var(--c3), var(--c2), var(--c1));
+  animation:spin 4s linear infinite;
+  opacity:0.7;
+  filter:blur(8px);
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.logo-wrap::after{
+  content:'';
+  position:absolute;inset:-3px;
+  background:var(--bg);
+  border-radius:22px;
+}
+.group-logo{
+  width:240px;height:240px;
+  border-radius:20px;
+  object-fit:cover;
+  position:relative;z-index:1;
+  display:block;
+}
+
+.hero-tag{
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;font-weight:400;
+  color:var(--c1);
+  letter-spacing:6px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+  opacity:0;animation:fade-up 0.8s 0.2s forwards;
+}
+
+.hero-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(2.5rem,6vw,5rem);
+  font-weight:900;
+  line-height:1.05;
+  margin-bottom:8px;
+  opacity:0;animation:fade-up 0.8s 0.4s forwards;
+  position:relative;
+}
+.hero-title .line1{
+  background:linear-gradient(90deg, var(--c1) 0%, #fff 50%, var(--c1) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{to{background-position:200% center;}}
+.hero-title .line2{
+  -webkit-text-fill-color:transparent;
+  -webkit-text-stroke:2px var(--c2);
+  filter:drop-shadow(0 0 20px var(--c2));
+}
+
+.hero-sub{
+  color:rgba(255,255,255,0.5);
+  font-size:1.1rem;font-weight:300;
+  letter-spacing:2px;
+  margin:18px 0 36px;
+  opacity:0;animation:fade-up 0.8s 0.6s forwards;
+}
+
+.btn-row{
+  display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fade-up 0.8s 0.8s forwards;
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:14px 32px;
+  border-radius:4px;
+  font-family:'Orbitron',monospace;
+  font-size:0.85rem;font-weight:600;
+  text-decoration:none;
+  text-transform:uppercase;letter-spacing:2px;
+  transition:all 0.3s ease;
+  position:relative;overflow:hidden;
+}
+.btn::before{
+  content:'';position:absolute;
+  inset:0;transform:translateX(-100%);
+  transition:transform 0.4s ease;
+}
+.btn:hover::before{transform:translateX(0);}
+.btn:hover{transform:translateY(-3px);}
+
+.btn-discord{
+  background:transparent;
+  border:1px solid #5865F2;
+  color:#5865F2;
+  box-shadow:0 0 20px rgba(88,101,242,0.3), inset 0 0 20px rgba(88,101,242,0.05);
+}
+.btn-discord::before{background:rgba(88,101,242,0.15);}
+.btn-discord:hover{box-shadow:0 0 40px rgba(88,101,242,0.6),inset 0 0 30px rgba(88,101,242,0.1);}
+
+.btn-tiktok{
+  background:transparent;
+  border:1px solid var(--c1);
+  color:var(--c1);
+  box-shadow:0 0 20px rgba(0,255,231,0.2), inset 0 0 20px rgba(0,255,231,0.03);
+}
+.btn-tiktok::before{background:rgba(0,255,231,0.08);}
+.btn-tiktok:hover{box-shadow:0 0 40px rgba(0,255,231,0.5),inset 0 0 30px rgba(0,255,231,0.08);}
+
+.btn svg{width:20px;height:20px;fill:currentColor;}
+
+@keyframes fade-up{
+  from{opacity:0;transform:translateY(30px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* SCROLL INDICATOR */
+.scroll-hint{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.3);font-size:0.7rem;letter-spacing:3px;
+  text-transform:uppercase;font-family:'Orbitron',monospace;
+  opacity:0;animation:fade-up 1s 1.2s forwards;
+}
+.scroll-line{
+  width:1px;height:50px;
+  background:linear-gradient(to bottom,var(--c1),transparent);
+  animation:scroll-anim 2s ease-in-out infinite;
+}
+@keyframes scroll-anim{
+  0%{transform:scaleY(0);transform-origin:top;}
+  50%{transform:scaleY(1);transform-origin:top;}
+  51%{transform:scaleY(1);transform-origin:bottom;}
+  100%{transform:scaleY(0);transform-origin:bottom;}
+}
+
+/* ─── SECTION HEADERS ─── */
+.section-head{
+  text-align:center;
+  padding:80px 20px 50px;
+}
+.section-head .eyebrow{
+  font-family:'Orbitron',monospace;
+  font-size:0.65rem;font-weight:400;
+  color:var(--c2);letter-spacing:6px;
+  text-transform:uppercase;
+  display:block;margin-bottom:12px;
+}
+.section-head h2{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:700;
+  color:#fff;
+  position:relative;display:inline-block;
+}
+.section-head h2::after{
+  content:'';position:absolute;
+  left:0;bottom:-10px;width:100%;height:2px;
+  background:linear-gradient(90deg, transparent, var(--c1), transparent);
+}
+
+/* ─── STATS ─── */
+.stats-band{
+  padding:60px 30px;
+  background:linear-gradient(90deg, transparent, rgba(0,255,231,0.03), transparent);
+  border-top:1px solid rgba(0,255,231,0.08);
+  border-bottom:1px solid rgba(0,255,231,0.08);
+}
+.stats-inner{
+  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  text-align:center;
+}
+.stat-box{
+  padding:30px 10px;
+  border:1px solid rgba(0,255,231,0.1);
+  background:rgba(0,255,231,0.02);
+  border-radius:4px;
+  transition:all 0.3s ease;
+  position:relative;overflow:hidden;
+}
+.stat-box::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--c1),transparent);
+  transform:scaleX(0);transition:transform 0.4s ease;
+}
+.stat-box:hover{border-color:rgba(0,255,231,0.4);background:rgba(0,255,231,0.05);}
+.stat-box:hover::before{transform:scaleX(1);}
+.stat-num{
+  font-family:'Orbitron',monospace;
+  font-size:2.8rem;font-weight:900;
+  color:var(--c1);
+  text-shadow:0 0 30px rgba(0,255,231,0.6);
+  line-height:1;
+}
+.stat-lbl{
+  font-size:0.8rem;font-weight:300;
+  color:rgba(255,255,255,0.4);
+  letter-spacing:3px;text-transform:uppercase;
+  margin-top:10px;
+  font-family:'Orbitron',monospace;
+}
+
+/* ─── ABOUT ─── */
+.about-wrap{
+  max-width:800px;margin:0 auto;
+  padding:0 30px 80px;
+}
+.about-card{
+  border:1px solid rgba(168,85,247,0.3);
+  background:linear-gradient(135deg, rgba(168,85,247,0.06), rgba(0,255,231,0.03));
+  border-radius:8px;
+  padding:50px;
+  position:relative;overflow:hidden;
+}
+.about-card::before{
+  content:'ABOUT';
+  position:absolute;right:-20px;top:50%;
+  transform:translateY(-50%) rotate(90deg);
+  font-family:'Orbitron',monospace;
+  font-size:5rem;font-weight:900;
+  color:rgba(168,85,247,0.05);
+  letter-spacing:10px;pointer-events:none;
+}
+.about-icon{
+  font-size:3rem;margin-bottom:20px;
+  filter:drop-shadow(0 0 20px rgba(0,255,231,0.6));
+  animation:pulse-icon 3s ease-in-out infinite;
+}
+@keyframes pulse-icon{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(0,255,231,0.4));}
+  50%{filter:drop-shadow(0 0 30px rgba(0,255,231,0.9));}
+}
+.about-card h2{
+  font-family:'Orbitron',monospace;
+  font-size:1.8rem;font-weight:700;
+  margin-bottom:20px;
+  background:linear-gradient(90deg,#fff,var(--c3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.about-card p{
+  color:rgba(255,255,255,0.6);
+  font-size:1.1rem;line-height:1.9;
+  margin-bottom:30px;
+  font-weight:300;
+}
+.about-card strong{color:var(--c1);-webkit-text-fill-color:var(--c1);}
+.about-tags{display:flex;flex-wrap:wrap;gap:12px;}
+.tag{
+  padding:8px 20px;
+  border:1px solid rgba(0,255,231,0.25);
+  background:rgba(0,255,231,0.05);
+  border-radius:2px;
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;font-weight:400;
+  letter-spacing:2px;color:var(--c1);
+  text-transform:uppercase;
+  transition:all 0.3s ease;
+}
+.tag:hover{border-color:var(--c1);background:rgba(0,255,231,0.12);box-shadow:0 0 20px rgba(0,255,231,0.2);}
+
+/* ─── GAMES ─── */
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+  gap:30px;
+  max-width:1200px;margin:0 auto;
+  padding:0 30px 80px;
+}
+
+.game-card{
+  border:1px solid rgba(255,255,255,0.06);
+  background:var(--card);
+  border-radius:8px;
+  overflow:hidden;
+  transition:all 0.4s ease;
+  transform-style:preserve-3d;
+  position:relative;
+}
+.game-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,255,231,0.06),transparent 60%);
+  opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:1;
+}
+.game-card:hover::before{opacity:1;}
+.game-card:hover{
+  border-color:rgba(0,255,231,0.35);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 40px rgba(0,255,231,0.1);
+  transform:translateY(-12px);
+}
+
+.thumb-wrap{position:relative;overflow:hidden;}
+.game-thumb{
+  width:100%;height:210px;object-fit:cover;
+  display:block;
+  transition:transform 0.5s ease, filter 0.5s ease;
+  filter:saturate(0.8) brightness(0.85);
+}
+.game-card:hover .game-thumb{transform:scale(1.08);filter:saturate(1.1) brightness(1);}
+.thumb-overlay{
+  position:absolute;bottom:0;left:0;right:0;height:60%;
+  background:linear-gradient(to top,var(--card),transparent);
+}
+.thumb-badge{
+  position:absolute;top:14px;right:14px;
+  background:rgba(0,255,231,0.15);
+  border:1px solid rgba(0,255,231,0.4);
+  color:var(--c1);
+  font-family:'Orbitron',monospace;
+  font-size:0.6rem;letter-spacing:2px;
+  padding:4px 12px;border-radius:2px;
+  text-transform:uppercase;
+  backdrop-filter:blur(10px);
+}
+
+.game-body{padding:28px;}
+.game-body h3{
+  font-family:'Orbitron',monospace;
+  font-size:1rem;font-weight:700;
+  color:#fff;margin-bottom:12px;
+  letter-spacing:1px;
+}
+.game-body p{
+  color:rgba(255,255,255,0.45);
+  font-size:0.95rem;line-height:1.7;
+  margin-bottom:24px;font-weight:300;
+}
+.play-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:11px 26px;
+  border:1px solid rgba(0,255,231,0.4);
+  color:var(--c1);
+  text-decoration:none;
+  border-radius:3px;
+  font-family:'Orbitron',monospace;
+  font-size:0.7rem;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;
+  transition:all 0.3s ease;
+  position:relative;overflow:hidden;
+}
+.play-btn::before{
+  content:'';position:absolute;inset:0;
+  background:var(--c1);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s ease;z-index:-1;
+}
+.play-btn:hover{color:#000;border-color:var(--c1);}
+.play-btn:hover::before{transform:scaleX(1);}
+.play-btn .arrow{
+  transition:transform 0.3s ease;
+  display:inline-block;
+}
+.play-btn:hover .arrow{transform:translateX(4px);}
+
+/* ─── TEAM ─── */
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+  max-width:1000px;margin:0 auto;
+  padding:0 30px 80px;
+}
+
+.member-card{
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.06);
+  background:var(--card);
+  border-radius:8px;
+  padding:36px 24px;
+  text-align:center;
+  transition:all 0.4s ease;
+  position:relative;overflow:hidden;
+}
+.member-card::before{
+  content:'';position:absolute;
+  left:50%;bottom:-60px;
+  width:120px;height:120px;
+  background:radial-gradient(circle, rgba(0,255,231,0.15), transparent 70%);
+  transform:translateX(-50%);
+  transition:bottom 0.4s ease,opacity 0.4s ease;
+  opacity:0;
+}
+.member-card:hover::before{bottom:-20px;opacity:1;}
+.member-card:hover{
+  border-color:rgba(0,255,231,0.35);
+  transform:translateY(-8px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,231,0.08);
+}
+
+.avatar-ring{
+  width:110px;height:110px;
+  margin:0 auto 20px;
+  border-radius:50%;
+  padding:3px;
+  background:conic-gradient(from 0deg, var(--c1), var(--c3), var(--c2), var(--c1));
+  animation:ring-spin 8s linear infinite;
+  transition:animation-duration 0.4s;
+}
+.member-card:hover .avatar-ring{animation-duration:2s;}
+@keyframes ring-spin{to{transform:rotate(360deg);}}
+
+.avatar-inner{
+  width:100%;height:100%;
+  border-radius:50%;
+  overflow:hidden;
+  background:var(--card);
+  border:3px solid var(--card);
+}
+.avatar-inner img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.4s ease;
+}
+.member-card:hover .avatar-inner img{transform:scale(1.1);}
+
+.member-role{
+  font-family:'Orbitron',monospace;
+  font-size:0.6rem;letter-spacing:3px;
+  color:var(--c1);text-transform:uppercase;
+  margin-bottom:6px;
+}
+.member-name{
+  font-family:'Orbitron',monospace;
+  font-size:1rem;font-weight:700;
+  color:#fff;
+}
+
+/* ─── MODAL ─── */
+.modal-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(20px);
+  z-index:1000;
+  align-items:center;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+
+.modal-box{
+  background:linear-gradient(145deg,#0d0d22,#0a0a18);
+  border:1px solid rgba(0,255,231,0.2);
+  border-radius:12px;
+  padding:50px;
+  max-width:420px;width:90%;
+  text-align:center;
+  position:relative;
+  animation:modal-in 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  box-shadow:0 0 80px rgba(0,255,231,0.1),0 40px 100px rgba(0,0,0,0.8);
+}
+@keyframes modal-in{
+  from{opacity:0;transform:scale(0.8) translateY(40px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.modal-close{
+  position:absolute;top:16px;right:20px;
+  background:none;border:none;color:rgba(255,255,255,0.3);
+  font-size:1.8rem;cursor:none;
+  transition:color 0.3s;line-height:1;
+}
+.modal-close:hover{color:var(--c1);}
+
+.modal-avatar{
+  width:140px;height:140px;
+  margin:0 auto 24px;
+  border-radius:50%;
+  padding:3px;
+  background:conic-gradient(from 0deg, var(--c1), var(--c3), var(--c2), var(--c1));
+  animation:ring-spin 4s linear infinite;
+}
+.modal-avatar-inner{
+  width:100%;height:100%;
+  border-radius:50%;overflow:hidden;
+  background:var(--card);border:3px solid var(--card);
+}
+.modal-avatar-inner img{width:100%;height:100%;object-fit:cover;}
+.modal-role{
+  font-family:'Orbitron',monospace;
+  font-size:0.65rem;letter-spacing:4px;
+  color:var(--c1);text-transform:uppercase;margin-bottom:8px;
+}
+.modal-name{
+  font-family:'Orbitron',monospace;
+  font-size:1.6rem;font-weight:900;
+  color:#fff;margin-bottom:18px;
+  text-shadow:0 0 30px rgba(0,255,231,0.3);
+}
+.modal-desc{
+  color:rgba(255,255,255,0.5);
+  font-size:1rem;line-height:1.8;font-weight:300;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid rgba(0,255,231,0.08);
+  padding:50px 30px;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Orbitron',monospace;
+  font-size:1.1rem;font-weight:700;
+  color:var(--c1);margin-bottom:8px;
+  text-shadow:0 0 20px rgba(0,255,231,0.4);
+}
+footer p{
+  color:rgba(255,255,255,0.25);
+  font-size:0.85rem;font-weight:300;
+  letter-spacing:1px;margin-top:6px;
+}
+footer a{color:var(--c1);text-decoration:none;transition:opacity 0.3s;}
+footer a:hover{opacity:0.7;}
+
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal{
+  opacity:0;transform:translateY(40px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+  .about-card{padding:30px;}
+  .modal-box{padding:36px 24px;}
+}
+@media(max-width:480px){
+  .games-grid{grid-template-columns:1fr;}
+  .team-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
 </head>
 <body>
-    <div id="stars-bg"></div>
 
-    <div class="content">
-        <section class="hero">
-            <div class="logo-container">
-                <img src="group.png" alt="DreamForge Team Logo" class="group-logo">
-            </div>
-            <h1>DreamForge Team</h1>
-            <p class="subtitle">Magyar Roblox Fejlesztő Csapat | Aktív, Barátságos Közösség</p>
-            <div style="display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;">
-                <a href="https://discord.gg/7xZnsHnDhY" target="_blank" class="discord-btn">
-                    <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                    Discord
-                </a>
-                <a href="https://www.tiktok.com/@dream.forge.studios" target="_blank" class="discord-btn" style="background: linear-gradient(135deg, #000000, #1a1a1a);">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
-                    TikTok
-                </a>
-            </div>
-        </section>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
 
-        <section class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Játék</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">Csapattag</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">HU</div>
-                    <div class="stat-label">Nyelv</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label">Közösség</div>
-                </div>
-            </div>
-        </section>
+<div class="content">
 
-        <section class="about-section">
-            <div class="about-card">
-                <div class="about-icon">🎮</div>
-                <h2>Rólunk</h2>
-                <p>A <strong>DreamForge Team</strong> egy magyar Roblox játék fejlesztő csapat, 2025. szeptemberében jött létre, a Magyar Grow a Garden nevű játékkal, de azóta már több játékot is kiadtak.</p>
-                <div class="about-features">
-                    <span>🎯 Magyar játékok</span>
-                    <span>🌟 Aktív közösség</span>
-                    <span>💬 Heti események</span>
-                </div>
-            </div>
-        </section>
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-grid"></div>
 
-        <section class="section-title">
-            <h2>Játékaink</h2>
-            <p>Fedezd fel a magyar Roblox élményeinket</p>
-        </section>
+  <div class="logo-wrap">
+    <img src="group.png" alt="DreamForge Team" class="group-logo">
+  </div>
 
-        <div class="games-grid">
-            <div class="game-card">
-                <img src="metfy2.png" alt="Magyar Escape Tsunami For Youtubers" class="game-thumbnail">
-                <div class="game-info">
-                    <h3>Magyar Escape Tsunami For Youtubers</h3>
-                    <p>Üdvözlünk a Magyar Escape Tsunami For Youtubers-ben! 🌊<br>Fuss, kapd el a Youtubereket, kerüld el a cunamikat! 🌊<br>Fejleszd a bázisodat és Youtuberjeidet! ⚡<br>OFFLINE is pénzt termelnek! 💤<br><br>Like-old és lépj be a csoportba! 👍</p>
-                    <a href="https://www.roblox.com/games/73532844100795/Magyar-Escape-Tsunami-For-Youtubers" target="_blank" class="play-btn">
-                        ▶ Játssz Most
-                    </a>
-                </div>
-            </div>
+  <p class="hero-tag">Magyar Roblox Fejlesztő Csapat</p>
 
-            <div class="game-card">
-                <img src="mgag2.png" alt="Magyar Grow a Garden" class="game-thumbnail">
-                <div class="game-info">
-                    <h3>Magyar Grow a Garden</h3>
-                    <p>🌱 Magyar Grow a Garden 🌱<br><br>Üdv a saját kertedben! Ültess, gondozd és arass! 🥕🍅<br>Fejleszd a kertedet és szerezj jutalmakat! ✨<br>Teljesen magyar nyelven készült! 💚<br><br>Lazulj el és nézd, ahogy nő a kerted! 🌷🌻</p>
-                    <a href="https://www.roblox.com/games/79438847818254/Magyar-Grow-a-Garden" target="_blank" class="play-btn">
-                        ▶ Játssz Most
-                    </a>
-                </div>
-            </div>
+  <h1 class="hero-title">
+    <div class="line1">DreamForge</div>
+    <div class="line2">TEAM</div>
+  </h1>
 
-            <div class="game-card">
-                <img src="ubi2.png" alt="Uborka Mic Up" class="game-thumbnail">
-                <div class="game-info">
-                    <h3>Uborka Mic Up</h3>
-                    <p>🥒 UBORKA MIC UP 🎤<br><br>Isten hozott az Uborka világában!<br>Vidámság, Chill, pihenés! 🥒<br>Beszélgess Voice Chat-en barátaiddal!<br>Hangulatos környezet vár! 🌟</p>
-                    <a href="https://www.roblox.com/games/133860068553637/Uborka-Mic-Up" target="_blank" class="play-btn">
-                        ▶ Játssz Most
-                    </a>
-                </div>
-            </div>
-        </div>
+  <p class="hero-sub">Aktív · Barátságos · Kreatív közösség</p>
 
-        <section class="team-section">
-            <div class="section-title">
-                <h2>Csapatunk</h2>
-                <p>Ismerd meg a DreamForge Team tagjait</p>
-            </div>
+  <div class="btn-row">
+    <a href="https://discord.gg/7xZnsHnDhY" target="_blank" class="btn btn-discord">
+      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      Discord
+    </a>
+    <a href="https://www.tiktok.com/@dream.forge.studios" target="_blank" class="btn btn-tiktok">
+      <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
+      TikTok
+    </a>
+  </div>
 
-            <div class="team-grid">
-                <div class="team-member" onclick="showMemberInfo('kris3dlab')">
-                    <div class="profile-cube">
-                        <img src="kris3dlab.png" alt="Kris3DLab">
-                    </div>
-                    <span class="role">Fő Tulajdonos</span>
-                    <span class="name">Kris3DLab</span>
-                </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-                <div class="team-member" onclick="showMemberInfo('benedek')">
-                    <div class="profile-cube">
-                        <img src="benedek.png" alt="Benedek">
-                    </div>
-                    <span class="role">Tulajdonos</span>
-                    <span class="name">Benedek</span>
-                </div>
-
-                <div class="team-member" onclick="showMemberInfo('xytax')">
-                    <div class="profile-cube">
-                        <img src="xytax.png" alt="Xytax">
-                    </div>
-                    <span class="role">Admin</span>
-                    <span class="name">Xytax</span>
-                </div>
-
-                <div class="team-member" onclick="showMemberInfo('kryono')">
-                    <div class="profile-cube">
-                        <img src="kryono.png" alt="Kryono">
-                    </div>
-                    <span class="role">Community Manager</span>
-                    <span class="name">Kryono</span>
-                </div>
-            </div>
-        </section>
-
-        <footer class="footer">
-            <p>© 2026 DreamForge Team | Magyar Roblox Fejlesztő Csapat</p>
-            <p style="margin-top: 10px;">
-                <a href="https://discord.gg/7xZnsHnDhY" target="_blank">Discord</a> | 
-                <a href="https://www.tiktok.com/@dream.forge.studios" target="_blank">TikTok</a>
-            </p>
-        </footer>
+<!-- ═══ STATS ═══ -->
+<div class="stats-band reveal">
+  <div class="stats-inner">
+    <div class="stat-box">
+      <div class="stat-num" data-target="3">0</div>
+      <div class="stat-lbl">Játék</div>
     </div>
-
-    <div class="modal" id="memberModal">
-        <button class="close-btn" onclick="closeModal()">×</button>
-        <div class="modal-content">
-            <div class="modal-cube">
-                <img id="modalImg" src="" alt="">
-            </div>
-            <p class="modal-role" id="modalRole"></p>
-            <h2 class="modal-name" id="modalName"></h2>
-            <p class="modal-desc" id="modalDesc"></p>
-        </div>
+    <div class="stat-box">
+      <div class="stat-num" data-target="4">0</div>
+      <div class="stat-lbl">Csapattag</div>
     </div>
+    <div class="stat-box">
+      <div class="stat-num">HU</div>
+      <div class="stat-lbl">Nyelv</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" data-target="1">0</div>
+      <div class="stat-lbl">Közösség</div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        const teamData = {
-            kris3dlab: {
-                name: 'Kris3DLab',
-                role: 'Fő Tulajdonos',
-                image: 'kris3dlab.png',
-                description: 'A DreamForge csapat alapítója és fő tulajdonosa. Roblox fejlesztő, aki magyar játékokat készít. Vezetésével a csapat folyamatosan növekszik!'
-            },
-            benedek: {
-                name: 'Benedek',
-                role: 'Tulajdonos',
-                image: 'benedek.png',
-                description: 'A DreamForge csapat tulajdonosa. Roblox fejlesztő, aki segít a játékok készítésében és a közösségépítésben.'
-            },
-            xytax: {
-                name: 'Xytax',
-                role: 'Admin',
-                image: 'xytax.png',
-                description: 'A DreamForge csapat adminisztrátora. Felügyeli a közösségi szabályokat és segít a smooth működésben.'
-            },
-            kryono: {
-                name: 'Kryono',
-                role: 'Community Manager',
-                image: 'kryono.png',
-                description: 'A DreamForge csapat Community Managere. Kapcsolatot tart a közösséggel, segít a játékosoknak és szervezi az eseményeket. A csapat arca a közösség előtt.'
-            }
-        };
+<!-- ═══ ABOUT ═══ -->
+<div class="about-wrap reveal">
+  <div class="about-card">
+    <div class="about-icon">🎮</div>
+    <h2>Rólunk</h2>
+    <p>A <strong>DreamForge Team</strong> egy magyar Roblox játék fejlesztő csapat, 2025. szeptemberében jött létre, a Magyar Grow a Garden nevű játékkal, de azóta már több játékot is kiadtak.</p>
+    <div class="about-tags">
+      <span class="tag">🎯 Magyar játékok</span>
+      <span class="tag">🌟 Aktív közösség</span>
+      <span class="tag">💬 Heti események</span>
+    </div>
+  </div>
+</div>
 
-        function showMemberInfo(memberId) {
-            const member = teamData[memberId];
-            document.getElementById('modalImg').src = member.image;
-            document.getElementById('modalRole').textContent = member.role;
-            document.getElementById('modalName').textContent = member.name;
-            document.getElementById('modalDesc').textContent = member.description;
-            document.getElementById('memberModal').classList.add('active');
+<!-- ═══ GAMES ═══ -->
+<div class="section-head reveal">
+  <span class="eyebrow">// Projektek</span>
+  <h2>Játékaink</h2>
+</div>
+
+<div class="games-grid">
+  <div class="game-card reveal">
+    <div class="thumb-wrap">
+      <img src="metfy2.png" alt="Magyar Escape Tsunami For Youtubers" class="game-thumb">
+      <div class="thumb-overlay"></div>
+      <span class="thumb-badge">Aktív</span>
+    </div>
+    <div class="game-body">
+      <h3>Magyar Escape Tsunami For Youtubers</h3>
+      <p>Fuss, kapd el a Youtubereket, kerüld el a cunamikat! 🌊 Fejleszd a bázisodat és Youtuberjeidet! Offline is pénzt termelnek! ⚡</p>
+      <a href="https://www.roblox.com/games/73532844100795/Magyar-Escape-Tsunami-For-Youtubers" target="_blank" class="play-btn">
+        Játssz Most <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="game-card reveal">
+    <div class="thumb-wrap">
+      <img src="mgag2.png" alt="Magyar Grow a Garden" class="game-thumb">
+      <div class="thumb-overlay"></div>
+      <span class="thumb-badge">Aktív</span>
+    </div>
+    <div class="game-body">
+      <h3>Magyar Grow a Garden</h3>
+      <p>🌱 Üdv a saját kertedben! Ültess, gondozd és arass! Fejleszd a kertedet és szerezj jutalmakat! Teljesen magyar nyelven! 💚</p>
+      <a href="https://www.roblox.com/games/79438847818254/Magyar-Grow-a-Garden" target="_blank" class="play-btn">
+        Játssz Most <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="game-card reveal">
+    <div class="thumb-wrap">
+      <img src="ubi2.png" alt="Uborka Mic Up" class="game-thumb">
+      <div class="thumb-overlay"></div>
+      <span class="thumb-badge">Aktív</span>
+    </div>
+    <div class="game-body">
+      <h3>Uborka Mic Up</h3>
+      <p>🥒 Isten hozott az Uborka világában! Vidámság, Chill, pihenés! Beszélgess Voice Chat-en barátaiddal! Hangulatos környezet vár! 🌟</p>
+      <a href="https://www.roblox.com/games/133860068553637/Uborka-Mic-Up" target="_blank" class="play-btn">
+        Játssz Most <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TEAM ═══ -->
+<div class="section-head reveal">
+  <span class="eyebrow">// Emberek</span>
+  <h2>Csapatunk</h2>
+</div>
+
+<div class="team-grid">
+  <div class="member-card reveal" onclick="openModal('kris3dlab')">
+    <div class="avatar-ring">
+      <div class="avatar-inner"><img src="kris3dlab.png" alt="Kris3DLab"></div>
+    </div>
+    <div class="member-role">Fő Tulajdonos</div>
+    <div class="member-name">Kris3DLab</div>
+  </div>
+
+  <div class="member-card reveal" onclick="openModal('benedek')">
+    <div class="avatar-ring">
+      <div class="avatar-inner"><img src="benedek.png" alt="Benedek"></div>
+    </div>
+    <div class="member-role">Tulajdonos</div>
+    <div class="member-name">Benedek</div>
+  </div>
+
+  <div class="member-card reveal" onclick="openModal('xytax')">
+    <div class="avatar-ring">
+      <div class="avatar-inner"><img src="xytax.png" alt="Xytax"></div>
+    </div>
+    <div class="member-role">Admin</div>
+    <div class="member-name">Xytax</div>
+  </div>
+
+  <div class="member-card reveal" onclick="openModal('kryono')">
+    <div class="avatar-ring">
+      <div class="avatar-inner"><img src="kryono.png" alt="Kryono"></div>
+    </div>
+    <div class="member-role">Community Manager</div>
+    <div class="member-name">Kryono</div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">DreamForge Team</div>
+  <p>© 2026 Magyar Roblox Fejlesztő Csapat</p>
+  <p style="margin-top:14px;">
+    <a href="https://discord.gg/7xZnsHnDhY" target="_blank">Discord</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.tiktok.com/@dream.forge.studios" target="_blank">TikTok</a>
+  </p>
+</footer>
+
+</div><!-- /content -->
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-avatar">
+      <div class="modal-avatar-inner"><img id="m-img" src="" alt=""></div>
+    </div>
+    <p class="modal-role" id="m-role"></p>
+    <h2 class="modal-name" id="m-name"></h2>
+    <p class="modal-desc" id="m-desc"></p>
+  </div>
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function lerp(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(lerp);
+})();
+document.querySelectorAll('a,button,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='28px';cur.style.height='28px';
+    ring.style.width='60px';ring.style.height='60px';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='16px';cur.style.height='16px';
+    ring.style.width='40px';ring.style.height='40px';
+  });
+});
+
+/* ─── CANVAS PARTICLES ─── */
+(function(){
+  const c=document.getElementById('bg-canvas');
+  const ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  resize();window.addEventListener('resize',()=>{resize();init();});
+
+  function init(){
+    pts=[];
+    const n=Math.min(120,Math.floor(W*H/12000));
+    for(let i=0;i<n;i++){
+      pts.push({
+        x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+        r:Math.random()*1.5+0.5,
+        a:Math.random()
+      });
+    }
+  }
+  init();
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t+=0.005;
+
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      const pulse=0.4+Math.sin(t+p.a*10)*0.3;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,255,231,${pulse*0.6})`;
+      ctx.fill();
+    });
+
+    const dist=180;
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<dist){
+          const a=(1-d/dist)*0.15;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x,pts[i].y);
+          ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle=`rgba(0,255,231,${a})`;
+          ctx.lineWidth=0.5;
+          ctx.stroke();
         }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 
-        function closeModal() {
-            document.getElementById('memberModal').classList.remove('active');
-        }
+/* ─── SCROLL REVEAL ─── */
+const revealEls=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'),i*60);
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+revealEls.forEach(el=>io.observe(el));
 
-        document.getElementById('memberModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
+/* ─── COUNTER ANIMATION ─── */
+function animCount(el,target){
+  let start=0;
+  const dur=1600;
+  const step=timestamp=>{
+    if(!start)start=timestamp;
+    const prog=Math.min((timestamp-start)/dur,1);
+    const ease=1-Math.pow(1-prog,4);
+    el.textContent=Math.round(ease*target);
+    if(prog<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const counterObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      if(el.dataset.target)animCount(el,+el.dataset.target);
+      counterObs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-target]').forEach(el=>counterObs.observe(el));
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
-        });
+/* ─── 3D TILT ─── */
+document.querySelectorAll('.game-card,.member-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-0.5;
+    const y=(e.clientY-r.top)/r.height-0.5;
+    card.style.transform=`perspective(800px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-8px)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+  });
+});
 
-        function createStars() {
-            const container = document.getElementById('stars-bg');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
-                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-                star.style.animationDelay = Math.random() * 5 + 's';
-                container.appendChild(star);
-            }
-            for (let i = 0; i < 3; i++) {
-                const shooting = document.createElement('div');
-                shooting.className = 'shooting-star';
-                shooting.style.left = (Math.random() * 100 + 50) + '%';
-                shooting.style.top = Math.random() * 50 + '%';
-                shooting.style.setProperty('--shoot-duration', (Math.random() * 2 + 1.5) + 's');
-                shooting.style.setProperty('--delay', (Math.random() * 10 + i * 5) + 's');
-                container.appendChild(shooting);
-            }
-        }
-
-        createStars();
-    </script>
+/* ─── MODAL ─── */
+const MEMBERS={
+  kris3dlab:{name:'Kris3DLab',role:'Fő Tulajdonos',img:'kris3dlab.png',desc:'A DreamForge csapat alapítója és fő tulajdonosa. Roblox fejlesztő, aki magyar játékokat készít. Vezetésével a csapat folyamatosan növekszik!'},
+  benedek:{name:'Benedek',role:'Tulajdonos',img:'benedek.png',desc:'A DreamForge csapat tulajdonosa. Roblox fejlesztő, aki segít a játékok készítésében és a közösségépítésben.'},
+  xytax:{name:'Xytax',role:'Admin',img:'xytax.png',desc:'A DreamForge csapat adminisztrátora. Felügyeli a közösségi szabályokat és segít a smooth működésben.'},
+  kryono:{name:'Kryono',role:'Community Manager',img:'kryono.png',desc:'A DreamForge csapat Community Managere. Kapcsolatot tart a közösséggel, segít a játékosoknak és szervezi az eseményeket.'}
+};
+function openModal(id){
+  const m=MEMBERS[id];
+  document.getElementById('m-img').src=m.img;
+  document.getElementById('m-role').textContent=m.role;
+  document.getElementById('m-name').textContent=m.name;
+  document.getElementById('m-desc').textContent=m.desc;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal')||e.currentTarget.tagName==='BUTTON')
+    document.getElementById('modal').classList.remove('open');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('modal').classList.remove('open');});
+</script>
 </body>
 </html>
